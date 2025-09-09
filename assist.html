@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hermes - Virtual Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assist.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Hermes - Virtual Assistant</h1>
+        <div class="command-box">
+            <label for="command-input">Enter Command:</label>
+            <input type="text" id="command-input" placeholder="Type your command here...">
+            <button onclick="sendCommand()">Submit</button>
+        </div>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        function sendCommand() {
+            let command = document.getElementById("command-input").value;
+
+            // Make a POST request to Flask with the command
+            fetch('/command', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `command=${command}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the response from the assistant
+                document.getElementById("response").innerText = data.response;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("response").innerText = "An error occurred.";
+            });
+        }
+    </script>
+</body>
+</html>
